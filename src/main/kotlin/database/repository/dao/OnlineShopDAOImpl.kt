@@ -32,7 +32,19 @@ class OnlineShopDAOImpl:OnlineShopDAO {
     }
 
     override suspend fun deleteShop(email: String) {
-       //todo
+        val query = "DELETE FROM online_shop WHERE Email=\'$email\'"
+        try {
+            Class.forName(DRIVER)
+            val connection = DriverManager.getConnection(
+                CONNECTION_URL,
+                USERNAME,
+                PASSWORD
+            )
+            val stmnt = connection.prepareStatement(query)
+            stmnt.execute()
+        }catch (e:SQLException){
+            //error msg
+        }
     }
 
     override suspend fun getShops(): Flow<OnlineShop> = flow {
@@ -57,5 +69,21 @@ class OnlineShopDAOImpl:OnlineShopDAO {
             //error msg
         }
 
+    }
+
+    override suspend fun updateShop(email: String, updatedShop: OnlineShop) {
+        val query = "UPDATE online_shop SET IsDeliveryFree=${updatedShop.isDeliveryFree} WHERE Email=\'$email\'"
+        try {
+            Class.forName(DRIVER)
+            val connection = DriverManager.getConnection(
+                CONNECTION_URL,
+                USERNAME,
+                PASSWORD
+            )
+            val stmnt = connection.prepareStatement(query)
+            stmnt.executeUpdate()
+        }catch (e:SQLException){
+            //error msg
+        }
     }
 }

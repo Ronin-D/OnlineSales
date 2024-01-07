@@ -20,6 +20,9 @@ class OnlineShopsViewModel (
 
     private val _onlineShops = MutableStateFlow(mutableStateListOf<OnlineShop>())
     val onlineShops = _onlineShops.asStateFlow()
+    val isAddOnlineShopDialogShown = mutableStateOf(false)
+    val isEditOnlineShopDialogShown = mutableStateOf(false)
+    val selectedOnlineShop = mutableStateOf<OnlineShop?>(null)
 
     fun loadShops(){
         CoroutineScope(Dispatchers.IO).launch {
@@ -28,4 +31,31 @@ class OnlineShopsViewModel (
             }
         }
     }
+
+    fun addShop(shop: OnlineShop){
+        CoroutineScope(Dispatchers.IO).launch {
+            onlineShopDAOImpl.addShop(shop)
+            reloadShops()
+        }
+    }
+
+    fun deleteShop(){
+        CoroutineScope(Dispatchers.IO).launch {
+            onlineShopDAOImpl.deleteShop(selectedOnlineShop.value!!.email)
+            reloadShops()
+        }
+    }
+
+    fun updateShop(shop: OnlineShop){
+        CoroutineScope(Dispatchers.IO).launch {
+            onlineShopDAOImpl.updateShop(selectedOnlineShop.value!!.email,shop)
+            reloadShops()
+        }
+    }
+
+    private fun reloadShops(){
+        _onlineShops.value.clear()
+        loadShops()
+    }
+
 }
