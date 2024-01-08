@@ -11,6 +11,7 @@ import ui.auth.AuthScreen
 import ui.auth.AuthViewModel
 import ui.home.HomeScreen
 import ui.online_shops.OnlineShopsScreen
+import ui.products.ProductsScreen
 
 @Composable
 fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
@@ -33,6 +34,12 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
 
             is RootComponent.Child.OnlineShopsChild -> {
                 OnlineShopsScreen(
+                    viewModel = child.component
+                )
+            }
+
+            is RootComponent.Child.ProductChild -> {
+                ProductsScreen(
                     viewModel = child.component
                 )
             }

@@ -1,9 +1,9 @@
-package database.repository.dao
+package database.repository.dao.online_shop
 
+import database.repository.dao.online_shop.OnlineShopDAO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import model.OnlineShop
-import util.Constants
 import util.Constants.CONNECTION_URL
 import util.Constants.DRIVER
 import util.Constants.PASSWORD
@@ -11,7 +11,7 @@ import util.Constants.USERNAME
 import java.sql.DriverManager
 import java.sql.SQLException
 
-class OnlineShopDAOImpl:OnlineShopDAO {
+class OnlineShopDAOImpl: OnlineShopDAO {
     override suspend fun addShop(shop: OnlineShop) {
         val query = "INSERT INTO online_shop(Email, IsDeliveryFree) VALUES(?, ?)"
         try {

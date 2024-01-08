@@ -5,6 +5,7 @@ import com.arkivanov.decompose.value.Value
 import ui.auth.AuthViewModel
 import ui.home.HomeViewModel
 import ui.online_shops.OnlineShopsViewModel
+import ui.products.ProductsViewModel
 
 interface RootComponent {
 
@@ -18,5 +19,6 @@ interface RootComponent {
         class AuthChild(val component:AuthViewModel ):Child()
         class HomeChild(val component:HomeViewModel ):Child()
         class OnlineShopsChild(val component: OnlineShopsViewModel):Child()
+        class ProductChild(val component: ProductsViewModel):Child()
     }
 }

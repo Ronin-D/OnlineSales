@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 import ui.auth.AuthViewModel
 import ui.home.HomeViewModel
 import ui.online_shops.OnlineShopsViewModel
+import ui.products.ProductsViewModel
 import util.Screens
 
 class DefaultRootComponent(
@@ -88,11 +89,11 @@ class DefaultRootComponent(
                )
            }
            Screens.Products -> {
-               RootComponent.Child.HomeChild(
-                   HomeViewModel(
+               RootComponent.Child.ProductChild(
+                   ProductsViewModel(
                        componentContext = componentContext,
-                       onNavigate = { screen->
-                           navigation.push(configuration = screen)
+                       onNavigateBack = {
+                           navigation.pop()
                        }
                    )
                )

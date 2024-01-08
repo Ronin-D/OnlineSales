@@ -76,7 +76,6 @@ fun OnlineShopsScreen(
                 )
             }
             LazyColumn(
-              //  verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()

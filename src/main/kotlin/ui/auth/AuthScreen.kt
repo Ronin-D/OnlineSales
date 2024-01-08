@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import ui.ErrorDialog
 import util.Constants.workModes
 
 @Composable
@@ -112,19 +113,12 @@ fun  AuthScreen(
                         viewModel.onNavigateToHome(viewModel.workMode.value)
                     }
                     else{
-                        //error msg todo
-                        Dialog(
-                            onDismissRequest = {
-                                   viewModel.isUserFound.value = null
+                        ErrorDialog(
+                            message = "User not found",
+                            onDismiss = {
+                                viewModel.isUserFound.value = null
                             }
-                        ){
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                            ) {
-                                Text("User not found")
-                            }
-                        }
+                        )
                     }
                 }
                 Button(

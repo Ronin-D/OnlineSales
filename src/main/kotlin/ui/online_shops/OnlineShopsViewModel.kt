@@ -3,13 +3,12 @@ package ui.online_shops
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import com.arkivanov.decompose.ComponentContext
-import database.repository.dao.OnlineShopDAOImpl
+import database.repository.dao.online_shop.OnlineShopDAOImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import model.OnlineShop
-import util.Screens
 
 class OnlineShopsViewModel (
     componentContext: ComponentContext,

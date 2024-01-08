@@ -26,6 +26,11 @@ dependencies {
     implementation("com.arkivanov.decompose:decompose:1.0.0")
     //serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    //loading image
+    implementation("media.kamel:kamel-image:0.9.1")
+    implementation("io.ktor:ktor-client-okhttp:2.3.7")
+    //date and time
+    implementation ("ca.gosyer:compose-material-dialogs-datetime:0.9.4")
 }
 
 compose.desktop {

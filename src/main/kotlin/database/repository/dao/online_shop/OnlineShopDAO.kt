@@ -1,4 +1,4 @@
-package database.repository.dao
+package database.repository.dao.online_shop
 
 import kotlinx.coroutines.flow.Flow
 import model.OnlineShop
