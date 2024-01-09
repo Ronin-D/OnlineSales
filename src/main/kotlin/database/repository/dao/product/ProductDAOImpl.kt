@@ -1,20 +1,25 @@
 package database.repository.dao.product
 
+import database.repository.dao.characteristic.CharacteristicDAOImpl
+import database.repository.dao.online_shop.OnlineShopDAOImpl
+import database.repository.dao.user.UserDAOImpl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toKotlinLocalDate
-import model.product.Characteristics
+import model.product.Characteristic
 import model.product.Product
-import util.Constants
 import util.Constants.CONNECTION_URL
 import util.Constants.DRIVER
 import util.Constants.PASSWORD
 import util.Constants.USERNAME
+import java.sql.Connection
 import java.sql.Date
 import java.sql.DriverManager
 
 class ProductDAOImpl:ProductDAO {
+
+    val characteristicDAOImpl = CharacteristicDAOImpl()
     override suspend fun addProduct(product: Product) {
         val query = "INSERT INTO product(product_id, ProductName, ProductModel, WarrantyDate, Price, Manufacturer, " +
                 "Image, CharacteristicId) VALUES(?,?,?,?,?,?,?,?)"
@@ -26,10 +31,10 @@ class ProductDAOImpl:ProductDAO {
                 PASSWORD
             )
             val characteristicsStmnt = connection.prepareStatement(characteristicsQuery)
-            characteristicsStmnt.setString(1,product.characteristics.id)
-            characteristicsStmnt.setInt(2,product.characteristics.length)
-            characteristicsStmnt.setInt(3,product.characteristics.width)
-            characteristicsStmnt.setInt(4,product.characteristics.height)
+            characteristicsStmnt.setString(1,product.characteristic.id)
+            characteristicsStmnt.setInt(2,product.characteristic.length)
+            characteristicsStmnt.setInt(3,product.characteristic.width)
+            characteristicsStmnt.setInt(4,product.characteristic.height)
             characteristicsStmnt.executeUpdate()
             val stmnt = connection.prepareStatement(query)
             stmnt.setString(1,product.id)
@@ -39,7 +44,7 @@ class ProductDAOImpl:ProductDAO {
             stmnt.setInt(5,product.price)
             stmnt.setString(6,product.manufacturer)
             stmnt.setString(7,product.image)
-            stmnt.setString(8,product.characteristics.id)
+            stmnt.setString(8,product.characteristic.id)
             stmnt.executeUpdate()
         }catch (e:Exception){
             //error msg
@@ -83,10 +88,10 @@ class ProductDAOImpl:ProductDAO {
                 PASSWORD
             )
             val characteristicStmnt = connection.prepareStatement(characteristicsQuery)
-            characteristicStmnt.setInt(1,updatedProduct.characteristics.length)
-            characteristicStmnt.setInt(2,updatedProduct.characteristics.width)
-            characteristicStmnt.setInt(3,updatedProduct.characteristics.height)
-            characteristicStmnt.setString(4,updatedProduct.characteristics.id)
+            characteristicStmnt.setInt(1,updatedProduct.characteristic.length)
+            characteristicStmnt.setInt(2,updatedProduct.characteristic.width)
+            characteristicStmnt.setInt(3,updatedProduct.characteristic.height)
+            characteristicStmnt.setString(4,updatedProduct.characteristic.id)
             characteristicStmnt.executeUpdate()
 
             val stmnt = connection.prepareStatement(query)
@@ -116,15 +121,9 @@ class ProductDAOImpl:ProductDAO {
             val stmnt = connection.prepareStatement(query)
             val resultSet = stmnt.executeQuery()
             while (resultSet.next()){
-                val characteristicsQuery = "SELECT * FROM characteristic WHERE Id = \'${resultSet.getString("CharacteristicId")}\'"
-                val characteristicsStmnt = connection.prepareStatement(characteristicsQuery)
-                val characteristicsResultSet = characteristicsStmnt.executeQuery()
-                characteristicsResultSet.next()
-                val characteristic = Characteristics(
-                    id = characteristicsResultSet.getString("Id"),
-                    length = characteristicsResultSet.getInt("Length"),
-                    width = characteristicsResultSet.getInt("Width"),
-                    height = characteristicsResultSet.getInt("Height")
+                val characteristic = characteristicDAOImpl.getCharacteristic(
+                    id = resultSet.getString("CharacteristicId"),
+                    connection=connection
                 )
                 emit(
                     Product(
@@ -135,7 +134,7 @@ class ProductDAOImpl:ProductDAO {
                         warrantyDate = resultSet.getDate("WarrantyDate").toLocalDate().toKotlinLocalDate(),
                         price = resultSet.getInt("Price"),
                         image = resultSet.getString("Image"),
-                        characteristics = characteristic
+                        characteristic = characteristic
                     )
                 )
             }
@@ -144,5 +143,26 @@ class ProductDAOImpl:ProductDAO {
             //error msg
             throw RuntimeException(e)
         }
+    }
+
+    override suspend fun getProduct(id: String, connection: Connection): Product {
+        val query = "SELECT * FROM product WHERE product_id=?"
+        val stmnt = connection.prepareStatement(query)
+        stmnt.setString(1,id)
+        val resultSet = stmnt.executeQuery()
+        resultSet.next()
+        return Product(
+            id = resultSet.getString("product_id"),
+            name = resultSet.getString("ProductName"),
+            manufacturer = resultSet.getString("Manufacturer"),
+            model = resultSet.getString("ProductModel"),
+            warrantyDate = resultSet.getDate("WarrantyDate").toLocalDate().toKotlinLocalDate(),
+            price = resultSet.getInt("Price"),
+            image = resultSet.getString("Image"),
+            characteristic = characteristicDAOImpl.getCharacteristic(
+                resultSet.getString("CharacteristicId"),
+                connection = connection
+            )
+        )
     }
 }

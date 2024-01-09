@@ -1,6 +1,6 @@
 package model.product
 
-data class Characteristics (
+data class Characteristic (
     val id:String,
     val width:Int,
     val height:Int,

@@ -2,6 +2,7 @@ package database.repository.dao.online_shop
 
 import kotlinx.coroutines.flow.Flow
 import model.OnlineShop
+import java.sql.Connection
 
 interface OnlineShopDAO {
     suspend fun addShop(shop: OnlineShop)
@@ -11,4 +12,7 @@ interface OnlineShopDAO {
         email: String,
         updatedShop: OnlineShop
     )
+
+    suspend fun getShop(email: String,connection: Connection):OnlineShop
+
 }

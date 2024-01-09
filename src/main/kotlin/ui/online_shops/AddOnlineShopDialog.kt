@@ -69,13 +69,6 @@ fun AddOnlineShopDialog(
             Button(
                 onClick = {
                     if(emailField.value.isNotBlank()){//todo
-//                        viewModel.addShop(
-//                            OnlineShop(
-//                                email = emailField.value,
-//                                isDeliveryFree = isDeliveryFreeField.value
-//                            )
-//                        )
-//                        onDismiss()
                         onConfirm(
                             OnlineShop(
                                 email = emailField.value,

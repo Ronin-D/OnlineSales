@@ -7,10 +7,12 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
+import io.ktor.util.*
 import ui.auth.AuthScreen
 import ui.auth.AuthViewModel
 import ui.home.HomeScreen
 import ui.online_shops.OnlineShopsScreen
+import ui.order.OrdersScreen
 import ui.products.ProductsScreen
 
 @Composable
@@ -40,6 +42,12 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
 
             is RootComponent.Child.ProductChild -> {
                 ProductsScreen(
+                    viewModel = child.component
+                )
+            }
+
+            is RootComponent.Child.OrdersChild -> {
+                OrdersScreen(
                     viewModel = child.component
                 )
             }

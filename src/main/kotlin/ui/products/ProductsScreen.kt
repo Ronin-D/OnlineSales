@@ -4,9 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -21,13 +18,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import model.product.Product
-import ui.online_shops.OnlineShopItem
 
 @Composable
 fun ProductsScreen(
@@ -285,17 +280,17 @@ fun ProductItem(
            }
        )
        Text(
-           product.characteristics.length.toString(),
+           product.characteristic.length.toString(),
            Modifier.width(120.dp),
            fontSize = 12.sp
        )
        Text(
-           product.characteristics.width.toString(),
+           product.characteristic.width.toString(),
            Modifier.width(120.dp),
            fontSize = 12.sp
        )
        Text(
-           product.characteristics.height.toString(),
+           product.characteristic.height.toString(),
            Modifier.width(120.dp),
            fontSize = 12.sp
        )

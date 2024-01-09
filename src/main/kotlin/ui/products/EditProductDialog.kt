@@ -18,11 +18,8 @@ import androidx.compose.ui.window.Dialog
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import kotlinx.datetime.LocalDate
-import model.OnlineShop
-import model.product.Characteristics
+import model.product.Characteristic
 import model.product.Product
-import java.util.*
 
 @Composable
 fun EditProductDialog(
@@ -50,13 +47,13 @@ fun EditProductDialog(
         mutableStateOf(product.image)
     }
     val width = remember {
-        mutableStateOf(product.characteristics.width.toString())
+        mutableStateOf(product.characteristic.width.toString())
     }
     val height = remember {
-        mutableStateOf(product.characteristics.height.toString())
+        mutableStateOf(product.characteristic.height.toString())
     }
     val length = remember {
-        mutableStateOf(product.characteristics.length.toString())
+        mutableStateOf(product.characteristic.length.toString())
     }
     Dialog(
         onDismissRequest = onDismiss,
@@ -197,8 +194,8 @@ fun EditProductDialog(
                             warrantyDate = warrantyDateField.value!!,
                             price = price.value.toInt(),
                             image = image.value,
-                            characteristics = Characteristics(
-                                id = product.characteristics.id,
+                            characteristic = Characteristic(
+                                id = product.characteristic.id,
                                 width = width.value.toInt(),
                                 height = height.value.toInt(),
                                 length = length.value.toInt()

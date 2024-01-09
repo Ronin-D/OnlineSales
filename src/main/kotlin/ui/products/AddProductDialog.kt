@@ -1,8 +1,11 @@
 package ui.products
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -19,13 +22,10 @@ import androidx.compose.ui.window.Dialog
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import model.OnlineShop
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toJavaLocalDate
-import model.product.Characteristics
+import model.product.Characteristic
 import model.product.Product
 import java.util.UUID
-import kotlin.random.Random
 
 @Composable
 fun AddProductDialog(
@@ -66,7 +66,12 @@ fun AddProductDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White),
+                .background(Color.White)
+                .scrollable(
+                    state = rememberScrollState(),
+                    enabled = true,
+                    orientation = Orientation.Vertical
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -199,7 +204,7 @@ fun AddProductDialog(
                             warrantyDate = warrantyDateField.value!!,
                             price = price.value.toInt(),
                             image = image.value,
-                            characteristics = Characteristics(
+                            characteristic = Characteristic(
                                 id = UUID.randomUUID().toString(),
                                 width = width.value.toInt(),
                                 height = height.value.toInt(),

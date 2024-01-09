@@ -8,6 +8,7 @@ import util.Constants.CONNECTION_URL
 import util.Constants.DRIVER
 import util.Constants.PASSWORD
 import util.Constants.USERNAME
+import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 
@@ -85,5 +86,17 @@ class OnlineShopDAOImpl: OnlineShopDAO {
         }catch (e:SQLException){
             //error msg
         }
+    }
+
+    override suspend fun getShop(email: String, connection: Connection):OnlineShop {
+        val shopQuery = "SELECT * FROM online_shop WHERE Email=?"
+        val shopStmnt = connection.prepareStatement(shopQuery)
+        shopStmnt.setString(1,email)
+        val shopResultSet = shopStmnt.executeQuery()
+        shopResultSet.next()
+        return OnlineShop(
+            email = shopResultSet.getString("Email"),
+            isDeliveryFree = shopResultSet.getBoolean("IsDeliveryFree")
+        )
     }
 }
