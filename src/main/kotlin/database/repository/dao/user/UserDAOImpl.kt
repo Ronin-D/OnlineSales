@@ -1,7 +1,9 @@
 package database.repository.dao.user
 
 import model.User
+import util.Constants
 import java.sql.Connection
+import java.sql.DriverManager
 import java.util.UUID
 
 class UserDAOImpl:UserDAO {
@@ -38,5 +40,4 @@ class UserDAOImpl:UserDAO {
         stmnt.setString(4,updatedUser.id)
         stmnt.executeUpdate()
     }
-
 }

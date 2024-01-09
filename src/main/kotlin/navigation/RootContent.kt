@@ -10,6 +10,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stac
 import io.ktor.util.*
 import ui.auth.AuthScreen
 import ui.auth.AuthViewModel
+import ui.delivery.DeliveryScreen
 import ui.home.HomeScreen
 import ui.online_shops.OnlineShopsScreen
 import ui.order.OrdersScreen
@@ -48,6 +49,12 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
 
             is RootComponent.Child.OrdersChild -> {
                 OrdersScreen(
+                    viewModel = child.component
+                )
+            }
+
+            is RootComponent.Child.DeliveriesChild -> {
+                DeliveryScreen(
                     viewModel = child.component
                 )
             }

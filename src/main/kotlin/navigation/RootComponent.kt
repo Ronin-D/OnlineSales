@@ -3,6 +3,7 @@ package navigation
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import ui.auth.AuthViewModel
+import ui.delivery.DeliveryViewModel
 import ui.home.HomeViewModel
 import ui.online_shops.OnlineShopsViewModel
 import ui.order.OrdersViewModel
@@ -18,5 +19,6 @@ interface RootComponent {
         class OnlineShopsChild(val component: OnlineShopsViewModel):Child()
         class ProductChild(val component: ProductsViewModel):Child()
         class OrdersChild(val component: OrdersViewModel):Child()
+        class DeliveriesChild(val component:DeliveryViewModel):Child()
     }
 }

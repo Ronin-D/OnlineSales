@@ -15,6 +15,7 @@ import util.Constants.CONNECTION_URL
 import util.Constants.DRIVER
 import util.Constants.PASSWORD
 import util.Constants.USERNAME
+import java.sql.Connection
 import java.sql.Date
 import java.sql.DriverManager
 import java.sql.Time
@@ -133,5 +134,17 @@ class OrderDAOImpl:OrderDAO {
         }catch (e:Exception){
         throw RuntimeException(e)
     }
+    }
+
+    override suspend fun getCustomerFromOrder(id: String, connection: Connection): User {
+        val query = "SELECT * FROM `order` WHERE Id=?"
+        val stmnt = connection.prepareStatement(query)
+        stmnt.setString(1,id)
+        val resultSet =stmnt.executeQuery()
+        resultSet.next()
+        return userDAOImpl.getUser(
+            resultSet.getString("CustomerId"),
+            connection
+        )
     }
 }
