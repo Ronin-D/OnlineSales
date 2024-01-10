@@ -11,10 +11,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import model.Delivery
 import model.Order
+import util.Mode
 
 class OrdersViewModel(
     componentContext: ComponentContext,
-    val onNavigateBack:()->Unit
+    val onNavigateBack:()->Unit,
+    val workMode: Mode
 ): ComponentContext by componentContext {
 
     private val orderDAOImpl = OrderDAOImpl()

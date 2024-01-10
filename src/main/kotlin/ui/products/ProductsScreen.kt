@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import model.product.Product
+import util.Mode
 
 @Composable
 fun ProductsScreen(
@@ -33,8 +34,6 @@ fun ProductsScreen(
     }
     val products = viewModel.products.collectAsState()
     Box(modifier = Modifier.fillMaxSize()) {
-
-
         if (viewModel.isAddProductDialogVisible.value){
             AddProductDialog(
                 onDismiss = {
@@ -157,30 +156,32 @@ fun ProductsScreen(
                     product,
                     backgrColor,
                     onSelect = {
-                        viewModel.selectedProduct.value = product
-                        viewModel.isEditProductDialogVisible.value = true
+                        if (viewModel.workMode==Mode.Admin){
+                            viewModel.selectedProduct.value = product
+                            viewModel.isEditProductDialogVisible.value = true
+                        }
                     }
                 )
             }
             }
         }
-
-        Button(
-            onClick = {
-                viewModel.isAddProductDialogVisible.value = true
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-                .clip(RoundedCornerShape(56.dp))
-        ){
-            Text(
-                "Add",
-                modifier = Modifier.padding(8.dp)
-            )
+        if (viewModel.workMode==Mode.Admin){
+            Button(
+                onClick = {
+                    viewModel.isAddProductDialogVisible.value = true
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+                    .clip(RoundedCornerShape(56.dp))
+            ){
+                Text(
+                    "Add",
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
         }
     }
-
 }
 
 @Composable

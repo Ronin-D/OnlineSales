@@ -13,7 +13,9 @@ import ui.home.HomeViewModel
 import ui.online_shops.OnlineShopsViewModel
 import ui.order.OrdersViewModel
 import ui.products.ProductsViewModel
+import util.Mode
 import util.Screens
+import util.Screens.*
 
 class DefaultRootComponent(
     componentContext: ComponentContext,
@@ -36,7 +38,7 @@ class DefaultRootComponent(
                    AuthViewModel(
                        componentContext = componentContext,
                        onNavigateToHome = {
-                           navigation.push(configuration = Screens.Home)
+                           navigation.push(configuration = Home(workMode = Mode.valueOf(it)))
                        }
                    )
                )
@@ -51,53 +53,58 @@ class DefaultRootComponent(
                    )
                )
            }
-           Screens.Deliveries -> {
+           is Deliveries -> {
                RootComponent.Child.DeliveriesChild(
                   DeliveryViewModel(
                        componentContext = componentContext,
                        onNavigateBack = {
                            navigation.pop()
-                       }
+                       },
+                      workMode = config.workMode
                    )
                )
            }
-           Screens.Home -> {
+           is Home -> {
                RootComponent.Child.HomeChild(
                    HomeViewModel(
                        componentContext = componentContext,
                        onNavigate = { screen->
                            navigation.push(configuration = screen)
-                       }
+                       },
+                       workMode = config.workMode
                    )
                )
            }
-           Screens.OnlineShops -> {
+           is OnlineShops -> {
                RootComponent.Child.OnlineShopsChild(
                    OnlineShopsViewModel(
                        componentContext = componentContext,
                        onNavigateBack = {
                            navigation.pop()
-                       }
+                       },
+                       workMode = config.workMode
                    )
                )
            }
-           Screens.Orders -> {
+           is Orders -> {
                RootComponent.Child.OrdersChild(
                    OrdersViewModel(
                        componentContext=componentContext,
                        onNavigateBack = {
                            navigation.pop()
-                       }
+                       },
+                       workMode = config.workMode
                    )
                )
            }
-           Screens.Products -> {
+           is Products -> {
                RootComponent.Child.ProductChild(
                    ProductsViewModel(
                        componentContext = componentContext,
                        onNavigateBack = {
                            navigation.pop()
-                       }
+                       },
+                       workMode = config.workMode
                    )
                )
            }

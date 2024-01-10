@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import model.Order
+import util.Mode
 
 @Composable
 fun OrdersScreen(
@@ -190,27 +191,31 @@ fun OrdersScreen(
                         order,
                         backgrColor,
                         onSelect = {
-                            viewModel.selectedOrder.value=order
-                            viewModel.isEditOrderDialogVisible.value=true
+                            if (viewModel.workMode==Mode.Admin){
+                                viewModel.selectedOrder.value=order
+                                viewModel.isEditOrderDialogVisible.value=true
+                            }
+
                         }
                     )
                 }
             }
         }
-
-        Button(
-            onClick = {
-                viewModel.isAddOrderDialogVisible.value=true
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-                .clip(RoundedCornerShape(56.dp))
-        ){
-            Text(
-                "Add",
-                modifier = Modifier.padding(8.dp)
-            )
+        if (viewModel.workMode==Mode.Admin){
+            Button(
+                onClick = {
+                    viewModel.isAddOrderDialogVisible.value=true
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+                    .clip(RoundedCornerShape(56.dp))
+            ){
+                Text(
+                    "Add",
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
         }
     }
 

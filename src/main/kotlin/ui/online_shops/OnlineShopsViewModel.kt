@@ -9,10 +9,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import model.OnlineShop
+import util.Mode
 
 class OnlineShopsViewModel (
     componentContext: ComponentContext,
-    val onNavigateBack:()->Unit
+    val onNavigateBack:()->Unit,
+    val workMode:Mode
 ): ComponentContext by componentContext {
 
     private val onlineShopDAOImpl = OnlineShopDAOImpl()

@@ -10,11 +10,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import model.product.Product
+import util.Mode
 import util.Screens
 
 class ProductsViewModel(
     componentContext: ComponentContext,
-    val onNavigateBack:()->Unit
+    val onNavigateBack:()->Unit,
+    val workMode: Mode
 ): ComponentContext by componentContext {
 
     private val productDAOImpl = ProductDAOImpl()

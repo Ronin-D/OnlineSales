@@ -13,11 +13,13 @@ import kotlinx.coroutines.launch
 import model.Delivery
 import model.User
 import util.Constants
+import util.Mode
 import java.sql.DriverManager
 
 class DeliveryViewModel(
     componentContext: ComponentContext,
-    val onNavigateBack:()->Unit
+    val onNavigateBack:()->Unit,
+    val workMode: Mode
 ): ComponentContext by componentContext {
     private val deliveryDAOImpl = DeliveryDAOImpl()
     private val _deliveries = MutableStateFlow(mutableStateListOf<Delivery>())

@@ -26,6 +26,7 @@ import model.Delivery
 import model.Order
 import ui.order.AddOrderDialog
 import ui.order.EditOrderDialog
+import util.Mode
 
 @Composable
 fun DeliveryScreen(
@@ -146,8 +147,10 @@ fun DeliveryScreen(
                         delivery,
                         backgrColor,
                         onSelect = {
-                            viewModel.selectedDelivery.value=delivery
-                            viewModel.isEditDeliveryDialogVisible.value=true
+                            if (viewModel.workMode== Mode.Admin){
+                                viewModel.selectedDelivery.value=delivery
+                                viewModel.isEditDeliveryDialogVisible.value=true
+                            }
                         }
                     )
                 }

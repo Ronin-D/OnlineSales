@@ -10,15 +10,15 @@ sealed class Screens (
     @Serializable
     data object Auth:Screens("authentication")
     @Serializable
-    data object Home:Screens("home")
+    data class Home(val workMode: Mode):Screens("home")
     @Serializable
-    data object OnlineShops:Screens("Online shops")
+    data class OnlineShops(val workMode: Mode):Screens("Online shops")
     @Serializable
-    data object Orders:Screens("Order list")
+    data class Orders(val workMode: Mode):Screens("Order list")
     @Serializable
-    data object Deliveries:Screens("Deliveries")
+    data class Deliveries(val workMode: Mode):Screens("Deliveries")
     @Serializable
-    data object Products:Screens("Products")
+    data class Products(val workMode: Mode):Screens("Products")
     @Serializable
     data object CompletedOrders:Screens("Completed orders")
 

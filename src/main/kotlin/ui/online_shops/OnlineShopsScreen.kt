@@ -107,26 +107,34 @@ fun OnlineShopsScreen(
                     OnlineShopItem(
                         onlineShop,
                         backgrColor,
-                        viewModel
+                        onSelect = {
+                            if (viewModel.workMode==Mode.Admin){
+                                viewModel.selectedOnlineShop.value = onlineShop
+                                viewModel.isEditOnlineShopDialogShown.value = true
+                            }
+
+                        }
                     )
                 }
             }
         }
-
-        Button(
-            onClick = {
-                viewModel.isAddOnlineShopDialogShown.value = true
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-                .clip(RoundedCornerShape(56.dp))
-        ){
-            Text(
-                "Add",
-                modifier = Modifier.padding(8.dp)
-            )
+        if (viewModel.workMode==Mode.Admin){
+            Button(
+                onClick = {
+                    viewModel.isAddOnlineShopDialogShown.value = true
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+                    .clip(RoundedCornerShape(56.dp))
+            ){
+                Text(
+                    "Add",
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
         }
+
     }
 
 }
@@ -135,15 +143,14 @@ fun OnlineShopsScreen(
 fun OnlineShopItem(
     onlineShop: OnlineShop,
     backGroundColor:Color,
-    viewModel: OnlineShopsViewModel
+    onSelect:()->Unit
 ){
     Row(
         modifier = Modifier
             .background(backGroundColor)
             .fillMaxWidth()
             .clickable {
-                viewModel.selectedOnlineShop.value = onlineShop
-                viewModel.isEditOnlineShopDialogShown.value = true
+                onSelect()
             }
     ) {
         Text(
