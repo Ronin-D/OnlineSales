@@ -1,4 +1,4 @@
-package ui.delivery
+package ui.order
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,7 +24,8 @@ import model.User
 @Composable
 fun AddDeliveryDialog(
     onDismiss:()->Unit,
-    onConfirm:(Delivery)->Unit
+    onConfirm:(Delivery)->Unit,
+    orderId:String
 ) {
     val deliveryDateField = remember {
         mutableStateOf<LocalDate?>(null)
@@ -35,9 +36,9 @@ fun AddDeliveryDialog(
     val courierNameField = remember {
         mutableStateOf("")
     }
-    val orderIdField = remember {
-        mutableStateOf("")
-    }
+//    val orderIdField = remember {
+//        mutableStateOf("")
+//    }
     Dialog(
         onDismissRequest = onDismiss,
     ){
@@ -117,23 +118,23 @@ fun AddDeliveryDialog(
                         .padding(8.dp)
                 )
             }
-            Text("Order info")
-            OutlinedTextField(
-                value = orderIdField.value,
-                onValueChange = {orderIdField.value = it},
-                placeholder = {
-                    Text("Order id")
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
+//            Text("Order info")
+//            OutlinedTextField(
+//                value = orderIdField.value,
+//                onValueChange = {orderIdField.value = it},
+//                placeholder = {
+//                    Text("Order id")
+//                },
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(horizontal = 16.dp)
+//            )
 
             Button(
                 onClick = {
                     onConfirm(
                         Delivery(
-                            id = orderIdField.value,
+                            id =orderId,
                             date = deliveryDateField.value!!.toJavaLocalDate().toKotlinLocalDate(),
                             time = deliveryTimeField.value!!.toJavaLocalTime().toKotlinLocalTime(),
                             courierName = courierNameField.value,

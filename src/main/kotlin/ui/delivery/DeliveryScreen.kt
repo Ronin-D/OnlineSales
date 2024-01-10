@@ -36,18 +36,6 @@ fun DeliveryScreen(
     }
     val deliveries = viewModel.deliveries.collectAsState()
     Box(modifier = Modifier.fillMaxSize()) {
-
-        if (viewModel.isAddDeliveryDialogVisible.value){
-            AddDeliveryDialog(
-                onConfirm = {
-                    viewModel.addDelivery(it)
-                    viewModel.isAddDeliveryDialogVisible.value=false
-                },
-                onDismiss = {
-                    viewModel.isAddDeliveryDialogVisible.value=false
-                }
-            )
-        }
         if (viewModel.isEditDeliveryDialogVisible.value){
             EditDeliveryDialog(
                 onConfirm = {
@@ -164,21 +152,6 @@ fun DeliveryScreen(
                     )
                 }
             }
-        }
-
-        Button(
-            onClick = {
-                viewModel.isAddDeliveryDialogVisible.value=true
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-                .clip(RoundedCornerShape(56.dp))
-        ){
-            Text(
-                "Add",
-                modifier = Modifier.padding(8.dp)
-            )
         }
     }
 

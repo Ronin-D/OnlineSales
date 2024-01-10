@@ -93,14 +93,14 @@ fun ProductsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ){
-//                        Text(
-//                            "Id",
-//                            modifier = Modifier.width(120.dp).padding(16.dp),
-//                            fontSize = 12.sp
-//                        )
+                        Text(
+                            "Id",
+                            modifier = Modifier.width(120.dp).padding(16.dp),
+                            fontSize = 12.sp
+                        )
                         Text(
                             "Product name",
-                            modifier = Modifier.width(120.dp).padding(16.dp),
+                            modifier = Modifier.width(120.dp),
                             fontSize = 12.sp
                         )
                         Text(
@@ -144,40 +144,6 @@ fun ProductsScreen(
                             modifier = Modifier.width(120.dp).padding(16.dp),
                             fontSize = 12.sp
                         )
-
-//                        Column(
-//                            verticalArrangement = Arrangement.Center,
-//                            horizontalAlignment = Alignment.CenterHorizontally
-//                        ) {
-//                            Text(
-//                                "Characteristics",
-//                                modifier = Modifier.width(100.dp),
-//                                fontSize = 12.sp
-//                            )
-//                            Row(
-//                                modifier = Modifier.padding(horizontal = 16.dp),
-//                                horizontalArrangement = Arrangement.spacedBy(16.dp),
-//                                verticalAlignment = Alignment.CenterVertically
-//                            ) {
-//                                Text(
-//                                    "Length",
-//                                    modifier = Modifier.width(100.dp),
-//                                    fontSize = 12.sp
-//                                )
-//                                Text(
-//                                    "Width",
-//                                    modifier = Modifier.width(100.dp),
-//                                    fontSize = 12.sp
-//                                )
-//                                Text(
-//                                    "Height",
-//                                    modifier = Modifier.width(100.dp),
-//                                    fontSize = 12.sp
-//                                )
-//                            }
-//                        }
-
-
                     }
                 }
             itemsIndexed(products.value){index,product->
@@ -233,18 +199,17 @@ fun ProductItem(
         verticalAlignment = Alignment.CenterVertically,
        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-//       Text(
-//           product.id,
-//           modifier = Modifier
-//               .width(120.dp)
-//               .padding(horizontal = 16.dp),
-//           fontSize = 12.sp
-//       )
        Text(
-           product.name,
+           product.id,
            modifier = Modifier
                .width(120.dp)
                .padding(horizontal = 16.dp),
+           fontSize = 12.sp
+       )
+       Text(
+           product.name,
+           modifier = Modifier
+               .width(120.dp),
            fontSize = 12.sp
        )
        Text(
@@ -291,7 +256,7 @@ fun ProductItem(
        )
        Text(
            product.characteristic.height.toString(),
-           Modifier.width(120.dp),
+           Modifier.width(120.dp).padding(horizontal = 16.dp),
            fontSize = 12.sp
        )
     }

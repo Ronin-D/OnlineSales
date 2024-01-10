@@ -23,7 +23,6 @@ class DeliveryViewModel(
     private val _deliveries = MutableStateFlow(mutableStateListOf<Delivery>())
     val deliveries = _deliveries.asStateFlow()
     val selectedDelivery = mutableStateOf<Delivery?>(null)
-    val isAddDeliveryDialogVisible = mutableStateOf(false)
     val isEditDeliveryDialogVisible = mutableStateOf(false)
     val customer = mutableStateOf<User?>(null)
     fun loadDeliveries(){
@@ -45,13 +44,6 @@ class DeliveryViewModel(
             reloadOrders()
         }
     }
-    fun addDelivery(delivery: Delivery){
-        CoroutineScope(Dispatchers.IO).launch {
-           deliveryDAOImpl.addDelivery(delivery)
-            reloadOrders()
-        }
-    }
-
     private fun reloadOrders(){
         _deliveries.value.clear()
         loadDeliveries()

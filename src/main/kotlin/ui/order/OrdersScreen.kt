@@ -31,11 +31,43 @@ fun OrdersScreen(
     val orders = viewModel.orders.collectAsState()
     Box(modifier = Modifier.fillMaxSize()) {
 
+        if (viewModel.isDeliveryAccepted.value){
+            AddDeliveryDialog(
+                onConfirm = {
+                    if (viewModel.isAddOrderDialogVisible.value){
+                        viewModel.addOrder(
+                            order = viewModel.orderForDelivery.value!!,
+                            delivery = it
+                        )
+                        viewModel.isAddOrderDialogVisible.value = false
+                    }
+                    else if (viewModel.isEditOrderDialogVisible.value){
+                        viewModel.editOrder(
+                            updatedOrder = viewModel.orderForDelivery.value!!,
+                            delivery = it
+                        )
+                        viewModel.isEditOrderDialogVisible.value=false
+                    }
+                    viewModel.isDeliveryAccepted.value = false
+                },
+                orderId = viewModel.orderForDelivery.value!!.id,
+                onDismiss = {
+                    viewModel.isDeliveryAccepted.value = false
+                }
+            )
+        }
         if (viewModel.isAddOrderDialogVisible.value){
             AddOrderDialog(
                 onConfirm = {
-                   viewModel.addOrder(it)
-                    viewModel.isAddOrderDialogVisible.value=false
+                    if(it.isAccepted){
+                        viewModel.isDeliveryAccepted.value=true
+                        viewModel.orderForDelivery.value=it
+                    }
+                    else{
+                        viewModel.addOrder(it)
+                        viewModel.isAddOrderDialogVisible.value=false
+                    }
+
                 },
                 onDismiss = {
                     viewModel.isAddOrderDialogVisible.value=false
@@ -45,8 +77,14 @@ fun OrdersScreen(
         if (viewModel.isEditOrderDialogVisible.value){
             EditOrderDialog(
                 onConfirm = {
-                    viewModel.editOrder(it)
-                    viewModel.isEditOrderDialogVisible.value = false
+                    if (it.isAccepted){
+                        viewModel.isDeliveryAccepted.value=true
+                        viewModel.orderForDelivery.value=it
+                    }else{
+                        viewModel.editOrder(it)
+                        viewModel.isEditOrderDialogVisible.value = false
+                    }
+
                 },
                 onDismiss = {
                     viewModel.isEditOrderDialogVisible.value = false

@@ -7,6 +7,7 @@ import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import kotlinx.serialization.Serializable
 import ui.auth.AuthViewModel
+import ui.completed_orders.CompletedOrdersViewModel
 import ui.delivery.DeliveryViewModel
 import ui.home.HomeViewModel
 import ui.online_shops.OnlineShopsViewModel
@@ -41,11 +42,11 @@ class DefaultRootComponent(
                )
            }
            Screens.CompletedOrders -> {
-               RootComponent.Child.HomeChild(
-                   HomeViewModel(
+               RootComponent.Child.CompletedOrdersChild(
+                   CompletedOrdersViewModel(
                        componentContext = componentContext,
-                       onNavigate = { screen->
-                           navigation.push(configuration = screen)
+                       onNavigateBack = {
+                           navigation.pop()
                        }
                    )
                )

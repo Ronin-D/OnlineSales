@@ -4,10 +4,7 @@ import database.repository.dao.order_dao.OrderDAOImpl
 import database.repository.dao.user.UserDAOImpl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.datetime.toJavaLocalDate
-import kotlinx.datetime.toJavaLocalTime
-import kotlinx.datetime.toKotlinLocalDate
-import kotlinx.datetime.toKotlinLocalTime
+import kotlinx.datetime.*
 import model.Delivery
 import util.Constants
 import util.Constants.CONNECTION_URL
@@ -110,6 +107,39 @@ class DeliveryDAOImpl:DeliveryDAO {
             stmnt.setString(1,delivery.id)
             stmnt.execute()
         } catch (e:Exception){
+            throw RuntimeException(e)
+        }
+    }
+
+    override suspend fun getAllDeliveriesByDate(date: LocalDate): Flow<Delivery> =flow{
+        val query="SELECT * FROM delivery WHERE YEAR(Date)=? AND MONTH(Date)=?"
+        try {
+            Class.forName(DRIVER)
+            val connection = DriverManager.getConnection(
+                CONNECTION_URL,
+                USERNAME,
+                PASSWORD
+            )
+            val stmnt = connection.prepareStatement(query)
+            stmnt.setInt(1,date.year)
+            stmnt.setInt(2,date.month.value)
+            val resultSet= stmnt.executeQuery()
+            while (resultSet.next()){
+                val user = userDAOImpl.getUser(
+                    resultSet.getString("CustomerId"),
+                    connection
+                )
+                emit(
+                    Delivery(
+                        id = resultSet.getString("Id"),
+                        customer = user,
+                        date = resultSet.getDate("Date").toLocalDate().toKotlinLocalDate(),
+                        time = resultSet.getTime("Time").toLocalTime().toKotlinLocalTime(),
+                        courierName = resultSet.getString("CourierName")
+                    )
+                )
+            }
+        }   catch (e:Exception){
             throw RuntimeException(e)
         }
     }

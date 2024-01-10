@@ -9,6 +9,7 @@ import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalTime
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalTime
+import model.CompletedOrder
 import model.Order
 import model.User
 import util.Constants.CONNECTION_URL
@@ -136,6 +137,56 @@ class OrderDAOImpl:OrderDAO {
     }
     }
 
+    override suspend fun getCompletedOrder(id: String): CompletedOrder {
+        val query = "SELECT * FROM `order` WHERE Id=?"
+        try {
+            Class.forName(DRIVER)
+            val connection = DriverManager.getConnection(
+                CONNECTION_URL,
+                USERNAME,
+                PASSWORD
+            )
+            val stmnt = connection.prepareStatement(query)
+            stmnt.setString(1,id)
+            val resultSet = stmnt.executeQuery()
+            resultSet.next()
+            val shop = shopDAOImpl.getShop(
+                email = resultSet.getString("ShopId"),
+                connection = connection
+            )
+            val product = productDAOImpl.getProduct(
+                resultSet.getString("ProductId"),
+                connection
+            )
+            val user = userDAOImpl.getUser(
+                resultSet.getString("CustomerId"),
+                connection
+            )
+            val order = Order(
+                id = resultSet.getString("Id"),
+                productId = product.id,
+                shopId = shop.email,
+                customer = user,
+                count = resultSet.getInt("Count"),
+                orderDate = resultSet.getDate("OrderDate").toLocalDate().toKotlinLocalDate(),
+                orderTime = resultSet.getTime("order_time").toLocalTime().toKotlinLocalTime(),
+                isAccepted = resultSet.getBoolean("IsAccepted"),
+                phoneNumber = resultSet.getString("PhoneNumber")
+            )
+            if (!order.isAccepted){
+                throw RuntimeException("order is not completed")
+            }
+            return CompletedOrder(
+                onlineShop = shop,
+                product = product,
+                order = order
+            )
+
+        } catch (e:Exception){
+            throw RuntimeException(e)
+        }
+    }
+
     override suspend fun getCustomerFromOrder(id: String, connection: Connection): User {
         val query = "SELECT * FROM `order` WHERE Id=?"
         val stmnt = connection.prepareStatement(query)
@@ -147,4 +198,5 @@ class OrderDAOImpl:OrderDAO {
             connection
         )
     }
+
 }
