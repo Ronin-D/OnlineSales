@@ -72,6 +72,31 @@ class OnlineShopDAOImpl: OnlineShopDAO {
 
     }
 
+    override suspend fun getShopsInstantly(): List<OnlineShop> {
+        val query = "SELECT * FROM online_shop"
+        val shops = mutableListOf<OnlineShop>()
+        try {
+            Class.forName(DRIVER)
+            val connection = DriverManager.getConnection(
+                CONNECTION_URL,
+                USERNAME,
+                PASSWORD
+            )
+            val stmnt = connection.prepareStatement(query)
+            val resultSet = stmnt.executeQuery()
+            while (resultSet.next()){
+                val shop = OnlineShop(
+                    resultSet.getString("Email"),
+                    resultSet.getBoolean("IsDeliveryFree")
+                )
+                shops.add(shop)
+            }
+        } catch (e:SQLException){
+            //error msg
+        }
+        return shops
+    }
+
     override suspend fun updateShop(email: String, updatedShop: OnlineShop) {
         val query = "UPDATE online_shop SET IsDeliveryFree=${updatedShop.isDeliveryFree} WHERE Email=\'$email\'"
         try {

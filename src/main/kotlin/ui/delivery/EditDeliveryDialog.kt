@@ -27,6 +27,7 @@ import kotlinx.datetime.*
 import model.Delivery
 import model.Order
 import model.User
+import ui.ErrorDialog
 
 @Composable
 fun EditDeliveryDialog(
@@ -46,6 +47,12 @@ fun EditDeliveryDialog(
     }
     val orderIdField = remember {
         mutableStateOf(delivery.id)
+    }
+    val isInputCorrect = remember {
+        mutableStateOf<Boolean?>(null)
+    }
+    val errorMsg = remember {
+        mutableStateOf("")
     }
     Dialog(
         onDismissRequest = onDismiss,
@@ -91,7 +98,7 @@ fun EditDeliveryDialog(
                     negativeButton("Cancel")
                 },
             ) {
-                timepicker { time ->
+                timepicker(is24HourClock = true) { time ->
                     deliveryTimeField.value=time
                 }
             }
@@ -129,7 +136,7 @@ fun EditDeliveryDialog(
             Text("Order info")
             OutlinedTextField(
                 value = orderIdField.value,
-                onValueChange = {orderIdField.value = it},
+                onValueChange = {},
                 enabled = false,
                 placeholder = {
                     Text("Order id")
@@ -138,18 +145,43 @@ fun EditDeliveryDialog(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             )
-
+            if (isInputCorrect.value == true){
+                onConfirm(
+                    Delivery(
+                        id = orderIdField.value,
+                        date = deliveryDateField.value.toJavaLocalDate().toKotlinLocalDate(),
+                        time = deliveryTimeField.value.toJavaLocalTime().toKotlinLocalTime(),
+                        courierName = courierNameField.value,
+                        customer = delivery.customer
+                    )
+                )
+            }
+            else if (isInputCorrect.value==false){
+                ErrorDialog(
+                    message =errorMsg.value,
+                    onDismiss = {
+                        isInputCorrect.value=null
+                    }
+                )
+            }
             Button(
                 onClick = {
-                    onConfirm(
-                        Delivery(
-                            id = orderIdField.value,
-                            date = deliveryDateField.value.toJavaLocalDate().toKotlinLocalDate(),
-                            time = deliveryTimeField.value.toJavaLocalTime().toKotlinLocalTime(),
-                            courierName = courierNameField.value,
-                            customer = delivery.customer
-                        )
-                    )
+                    if(deliveryDateField.value==null){
+                        errorMsg.value = "delivery date must be filled"
+                        isInputCorrect.value=false
+                    }
+                    else if (deliveryTimeField.value==null){
+                        errorMsg.value = "delivery time must be filled"
+                        isInputCorrect.value=false
+                    }
+                    else if (!courierNameField.value.matches(Regex("[a-zA-ZА-Яа-я]*"))
+                        ||courierNameField.value.length<3||courierNameField.value.length>100){
+                        errorMsg.value = "courier name is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else{
+                        isInputCorrect.value=true
+                    }
                 },
                 modifier = Modifier.padding(horizontal = 16.dp)
             ){

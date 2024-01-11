@@ -109,6 +109,7 @@ class DeliveryDAOImpl:DeliveryDAO {
         } catch (e:Exception){
             throw RuntimeException(e)
         }
+        orderDAOImpl.deleteOrder(delivery.id)
     }
 
     override suspend fun getAllDeliveriesByDate(date: LocalDate): Flow<Delivery> =flow{

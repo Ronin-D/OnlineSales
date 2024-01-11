@@ -18,14 +18,14 @@ class CompletedOrdersViewModel (
     val date = mutableStateOf<LocalDate?>(null)
 
     private val completedOrdersRepository = CompletedOrdersRepository()
-    val completedOrders = mutableStateListOf<CompletedOrder>()
+    val completedOrders = mutableStateOf<List<CompletedOrder>>(emptyList())
 
     private val usedProducts = mutableSetOf<String>()
 
     fun loadCompletedOrders(date: LocalDate){
-        reloadCompletedOrders()
+        //reloadCompletedOrders()
         CoroutineScope(Dispatchers.IO).launch {
-            completedOrders.addAll(completedOrdersRepository.getCompletedOrders(date))
+            completedOrders.value = completedOrdersRepository.getCompletedOrders(date)
         }
     }
 
@@ -42,7 +42,7 @@ class CompletedOrdersViewModel (
 
     fun getAllCompletedOrdersByProduct(product: Product):List<CompletedOrder>{
         if(!usedProducts.contains(getMapKey(product))){
-            val items =  completedOrders.filter {
+            val items =  completedOrders.value.filter {
                 it.product.model==product.model && it.product.name==product.name
                         && it.product.manufacturer==product.manufacturer
             }
@@ -58,8 +58,8 @@ class CompletedOrdersViewModel (
     private fun getMapKey(product: Product):String{
         return "name:${product.name} manufacturer:${product.manufacturer} model:${product.model}"
     }
-    private fun reloadCompletedOrders(){
-        completedOrders.clear()
-    }
+//    private fun reloadCompletedOrders(){
+//        completedOrders.value = emptyList()
+//    }
 
 }

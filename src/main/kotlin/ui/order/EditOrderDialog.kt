@@ -26,6 +26,7 @@ import model.Order
 import model.User
 import model.product.Product
 import okhttp3.internal.notifyAll
+import ui.ErrorDialog
 import java.util.*
 
 @Composable
@@ -64,6 +65,12 @@ fun EditOrderDialog(
     }
     val productId = remember {
         mutableStateOf(order.productId)
+    }
+    val isInputCorrect = remember {
+        mutableStateOf<Boolean?>(null)
+    }
+    val errorMsg = remember {
+        mutableStateOf("")
     }
 
     Dialog(
@@ -121,7 +128,7 @@ fun EditOrderDialog(
                     negativeButton("Cancel")
                 },
             ) {
-                timepicker { time ->
+                timepicker(is24HourClock = true) { time ->
                     orderTimeField.value=time
                 }
             }
@@ -163,6 +170,7 @@ fun EditOrderDialog(
             ){
                 Checkbox(
                     checked = isAccepted.value,
+                    enabled = false,
                     onCheckedChange = {
                         isAccepted.value = it
                     }
@@ -225,6 +233,35 @@ fun EditOrderDialog(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             )
+            if (isInputCorrect.value == true){
+                onConfirm(
+                    Order(
+                        orderTime = orderTimeField.value,
+                        orderDate = orderDateField.value,
+                        count = count.value.toInt(),
+                        id = order.id,
+                        isAccepted = isAccepted.value,
+                        phoneNumber = phoneNumber.value,
+                        customer = User(
+                            id = order.customer.id,
+                            name = name.value,
+                            surname = surname.value,
+                            patronymic = patronymic.value
+                        ),
+                        productId = productId.value,
+                        shopId = shopEmail.value
+                    )
+                )
+                isInputCorrect.value = null
+            }
+            else if (isInputCorrect.value==false){
+                ErrorDialog(
+                    message =errorMsg.value,
+                    onDismiss = {
+                        isInputCorrect.value=null
+                    }
+                )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -233,24 +270,50 @@ fun EditOrderDialog(
             ) {
                 Button(
                     onClick = {
-                        onConfirm(
-                            Order(
-                                orderTime = orderTimeField.value,
-                                orderDate = orderDateField.value,
-                                count = count.value.toInt(),
-                                id = order.id,
-                                isAccepted = isAccepted.value,
-                                phoneNumber = phoneNumber.value,
-                                customer = User(
-                                    id = order.customer.id,
-                                    name = name.value,
-                                    surname = surname.value,
-                                    patronymic = patronymic.value
-                                ),
-                                productId = productId.value,
-                                shopId = shopEmail.value
-                            )
-                        )
+                        if (!phoneNumber.value.matches(Regex("^(\\+7)(\\d{10})$"))){
+                            errorMsg.value = "phone number field is incorrect"
+                            isInputCorrect.value=false
+                        }
+                        else if (orderDateField.value==null){
+                            errorMsg.value = "date field is incorrect"
+                            isInputCorrect.value=false
+                        }
+                        else if (orderTimeField.value==null){
+                            errorMsg.value = "time field is incorrect"
+                            isInputCorrect.value=false
+                        }
+                        else if (!count.value.matches(Regex("[1-9][0-9]*"))
+                            ||count.value.isBlank()
+                            ||count.value.length>6){
+                            errorMsg.value = "count field is incorrect"
+                            isInputCorrect.value=false
+                        }
+                        else if (!name.value.matches(Regex("[a-zA-ZА-Яа-я]*"))
+                            ||name.value.length<3||name.value.length>100||name.value.isBlank()){
+                            errorMsg.value = "name field is incorrect"
+                            isInputCorrect.value=false
+                        }
+                        else if (!surname.value.matches(Regex("[a-zA-ZА-Яа-я]*"))
+                            ||surname.value.length<3||surname.value.length>100||surname.value.isBlank()){
+                            errorMsg.value = "surname field is incorrect"
+                            isInputCorrect.value=false
+                        }
+                        else if (!patronymic.value.matches(Regex("[a-zA-ZА-Яа-я]*"))
+                            ||patronymic.value.length<3||patronymic.value.length>100||patronymic.value.isBlank()) {
+                            errorMsg.value = "patronymic field is incorrect"
+                            isInputCorrect.value = false
+                        }
+                        else if (shopEmail.value.isBlank()){
+                            errorMsg.value = "email must be filled"
+                            isInputCorrect.value=false
+                        }
+                        else if (productId.value.isBlank()){
+                            errorMsg.value = "product id must be filled"
+                            isInputCorrect.value=false
+                        }
+                        else{
+                            isInputCorrect.value=true
+                        }
                     },
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ){

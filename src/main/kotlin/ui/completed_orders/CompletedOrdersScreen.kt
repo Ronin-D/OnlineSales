@@ -137,7 +137,7 @@ fun CompletedOrdersScreen(
                     )
                 }
             }
-            itemsIndexed(viewModel.completedOrders){index,completedOrder->
+            itemsIndexed(viewModel.completedOrders.value){index,completedOrder->
                 val items = viewModel.getAllCompletedOrdersByProduct(completedOrder.product)
                 if (items.isNotEmpty()){
                     CompletedOrderItem(

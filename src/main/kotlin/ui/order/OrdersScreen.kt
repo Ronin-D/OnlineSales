@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import model.Order
+import ui.ErrorDialog
 import util.Mode
 
 @Composable
@@ -28,34 +29,38 @@ fun OrdersScreen(
 ) {
     LaunchedEffect(null){
         viewModel.loadOrders()
+        viewModel.getProducts()
+        viewModel.getShops()
     }
     val orders = viewModel.orders.collectAsState()
     Box(modifier = Modifier.fillMaxSize()) {
 
         if (viewModel.isDeliveryAccepted.value){
-            AddDeliveryDialog(
-                onConfirm = {
-                    if (viewModel.isAddOrderDialogVisible.value){
-                        viewModel.addOrder(
-                            order = viewModel.orderForDelivery.value!!,
-                            delivery = it
-                        )
-                        viewModel.isAddOrderDialogVisible.value = false
+            if (viewModel.shops.value!=null||viewModel.products.value!=null){
+                AddDeliveryDialog(
+                    onConfirm = {
+                        if (viewModel.isAddOrderDialogVisible.value){
+                            viewModel.addOrder(
+                                order = viewModel.orderForDelivery.value!!,
+                                delivery = it
+                            )
+                            viewModel.isAddOrderDialogVisible.value = false
+                        }
+                        else if (viewModel.isEditOrderDialogVisible.value){
+                            viewModel.editOrder(
+                                updatedOrder = viewModel.orderForDelivery.value!!,
+                                delivery = it
+                            )
+                            viewModel.isEditOrderDialogVisible.value=false
+                        }
+                        viewModel.isDeliveryAccepted.value = false
+                    },
+                    order = viewModel.orderForDelivery.value!!,
+                    onDismiss = {
+                        viewModel.isDeliveryAccepted.value = false
                     }
-                    else if (viewModel.isEditOrderDialogVisible.value){
-                        viewModel.editOrder(
-                            updatedOrder = viewModel.orderForDelivery.value!!,
-                            delivery = it
-                        )
-                        viewModel.isEditOrderDialogVisible.value=false
-                    }
-                    viewModel.isDeliveryAccepted.value = false
-                },
-                orderId = viewModel.orderForDelivery.value!!.id,
-                onDismiss = {
-                    viewModel.isDeliveryAccepted.value = false
-                }
-            )
+                )
+            }
         }
         if (viewModel.isAddOrderDialogVisible.value){
             AddOrderDialog(
@@ -70,6 +75,8 @@ fun OrdersScreen(
                     }
 
                 },
+                shops = viewModel.shops.value!!,
+                products = viewModel.products.value!!,
                 onDismiss = {
                     viewModel.isAddOrderDialogVisible.value=false
                 }
@@ -78,14 +85,13 @@ fun OrdersScreen(
         if (viewModel.isEditOrderDialogVisible.value){
             EditOrderDialog(
                 onConfirm = {
-                    if (it.isAccepted){
+                    if (!viewModel.selectedOrder.value!!.isAccepted&&it.isAccepted){
                         viewModel.isDeliveryAccepted.value=true
                         viewModel.orderForDelivery.value=it
                     }else{
                         viewModel.editOrder(it)
                         viewModel.isEditOrderDialogVisible.value = false
                     }
-
                 },
                 onDismiss = {
                     viewModel.isEditOrderDialogVisible.value = false

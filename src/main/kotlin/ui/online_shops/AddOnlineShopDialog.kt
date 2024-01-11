@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import model.OnlineShop
+import ui.ErrorDialog
 
 @Composable
 fun AddOnlineShopDialog(
@@ -30,7 +31,12 @@ fun AddOnlineShopDialog(
     val isDeliveryFreeField = remember {
         mutableStateOf(false)
     }
-
+    val isInputCorrect = remember {
+        mutableStateOf<Boolean?>(null)
+    }
+    val errorMsg = remember {
+        mutableStateOf("")
+    }
     Dialog(
         onDismissRequest = onDismiss,
     ){
@@ -66,15 +72,33 @@ fun AddOnlineShopDialog(
                 )
                 Text("Free delivery")
             }
+            if (isInputCorrect.value==true){
+                onConfirm(
+                    OnlineShop(
+                        email = emailField.value,
+                        isDeliveryFree = isDeliveryFreeField.value
+                    )
+                )
+            }
+            else if (isInputCorrect.value==false){
+                ErrorDialog(
+                    message =errorMsg.value,
+                    onDismiss = {
+                        isInputCorrect.value=null
+                    }
+                )
+            }
             Button(
                 onClick = {
-                    if(emailField.value.isNotBlank()){//todo
-                        onConfirm(
-                            OnlineShop(
-                                email = emailField.value,
-                                isDeliveryFree = isDeliveryFreeField.value
-                            )
-                        )
+                    if(emailField.value.isBlank()
+                        ||!emailField.value.matches(Regex("[a-zA-Z_-]+.@[a-z]+.[.].[a-z]+"))
+                        ||emailField.value.length>256||emailField.value.length<10
+                        ){
+                        errorMsg.value = "email field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else{
+                        isInputCorrect.value=true
                     }
                 },
                 modifier = Modifier.padding(16.dp)

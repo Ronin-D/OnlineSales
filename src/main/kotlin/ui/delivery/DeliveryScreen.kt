@@ -32,7 +32,7 @@ import util.Mode
 fun DeliveryScreen(
     viewModel: DeliveryViewModel
 ) {
-    LaunchedEffect(null){
+    LaunchedEffect(null) {
         viewModel.loadDeliveries()
     }
     val deliveries = viewModel.deliveries.collectAsState()
@@ -157,7 +157,6 @@ fun DeliveryScreen(
             }
         }
     }
-
 }
 
 @Composable

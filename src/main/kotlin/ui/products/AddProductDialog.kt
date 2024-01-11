@@ -25,6 +25,7 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.datetime.LocalDate
 import model.product.Characteristic
 import model.product.Product
+import ui.ErrorDialog
 import java.util.UUID
 
 @Composable
@@ -57,6 +58,12 @@ fun AddProductDialog(
         mutableStateOf("")
     }
     val length = remember {
+        mutableStateOf("")
+    }
+    val isInputCorrect = remember {
+        mutableStateOf<Boolean?>(null)
+    }
+    val errorMsg = remember {
         mutableStateOf("")
     }
 
@@ -193,25 +200,98 @@ fun AddProductDialog(
                         .padding(8.dp)
                 )
             }
-            Button(
-                onClick = {
-                    onConfirm(
-                        Product(
+            if (isInputCorrect.value == true){
+                onConfirm(
+                    Product(
+                        id = UUID.randomUUID().toString(),
+                        name = productNameField.value,
+                        model = productModelField.value,
+                        manufacturer = manufacturer.value,
+                        warrantyDate = warrantyDateField.value!!,
+                        price = price.value.toInt(),
+                        image = image.value,
+                        characteristic = Characteristic(
                             id = UUID.randomUUID().toString(),
-                            name = productNameField.value,
-                            model = productModelField.value,
-                            manufacturer = manufacturer.value,
-                            warrantyDate = warrantyDateField.value!!,
-                            price = price.value.toInt(),
-                            image = image.value,
-                            characteristic = Characteristic(
-                                id = UUID.randomUUID().toString(),
-                                width = width.value.toInt(),
-                                height = height.value.toInt(),
-                                length = length.value.toInt()
-                            )
+                            width = width.value.toInt(),
+                            height = height.value.toInt(),
+                            length = length.value.toInt()
                         )
                     )
+                )
+            }
+            else if(isInputCorrect.value==false){
+                ErrorDialog(
+                    message =errorMsg.value,
+                    onDismiss = {
+                        isInputCorrect.value=null
+                    }
+                )
+            }
+            Button(
+                onClick = {
+                    if (productNameField.value.length<3||productNameField.value.length>100){
+                        errorMsg.value = "product name field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (!productNameField.value.matches(regex = Regex("[a-zA-ZА-Яа-я\\s]*"))){
+                        errorMsg.value = "product name field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (productNameField.value.isBlank()){
+                        errorMsg.value = "product name field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (manufacturer.value.length<3||manufacturer.value.length>100){
+                        errorMsg.value = "manufacturer field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (!manufacturer.value.matches(regex = Regex("[a-zA-ZА-Яа-я\\s]*"))){
+                        errorMsg.value = "manufacturer field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (manufacturer.value.isBlank()){
+                        errorMsg.value = "manufacturer field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (productModelField.value.length<3||productModelField.value.length>100){
+                        errorMsg.value = "product model field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (productModelField.value.isBlank()){
+                        errorMsg.value = "product model field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (!width.value.matches(Regex("[0-9]*"))
+                        ||width.value.length>100||width.value=="0"){
+                        errorMsg.value = "width  field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (!height.value.matches(Regex("[0-9]*"))
+                        ||height.value.length>100||height.value=="0"){
+                        errorMsg.value = "height field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (!length.value.matches(Regex("[0-9]*"))
+                        ||length.value.length>100||length.value=="0"){
+                        errorMsg.value = "length field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (warrantyDateField.value==null){
+                        errorMsg.value = "warranty date must be filled"
+                        isInputCorrect.value=false
+                    }
+                    else if (!price.value.matches(Regex("[0-9]*"))
+                        ||price.value.length>6||price.value=="0"){
+                        errorMsg.value = "price field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (image.value.length>1000){
+                        errorMsg.value = "image is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else{
+                        isInputCorrect.value=true
+                    }
                 },
                 modifier = Modifier.padding(horizontal = 16.dp)
             ){

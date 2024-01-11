@@ -145,6 +145,44 @@ class ProductDAOImpl:ProductDAO {
         }
     }
 
+    override suspend fun getProductsInstantly(): List<Product> {
+        val products = mutableListOf<Product>()
+        val query = "SELECT * FROM product"
+        try {
+            Class.forName(DRIVER)
+            val connection = DriverManager.getConnection(
+                CONNECTION_URL,
+                USERNAME,
+                PASSWORD
+            )
+            val stmnt = connection.prepareStatement(query)
+            val resultSet = stmnt.executeQuery()
+            while (resultSet.next()){
+                val characteristic = characteristicDAOImpl.getCharacteristic(
+                    id = resultSet.getString("CharacteristicId"),
+                    connection=connection
+                )
+                products.add(
+                    Product(
+                        id = resultSet.getString("product_id"),
+                        name = resultSet.getString("ProductName"),
+                        manufacturer = resultSet.getString("Manufacturer"),
+                        model = resultSet.getString("ProductModel"),
+                        warrantyDate = resultSet.getDate("WarrantyDate").toLocalDate().toKotlinLocalDate(),
+                        price = resultSet.getInt("Price"),
+                        image = resultSet.getString("Image"),
+                        characteristic = characteristic
+                    )
+                )
+            }
+        }
+        catch (e:Exception){
+            //error msg
+            throw RuntimeException(e)
+        }
+        return products
+    }
+
     override suspend fun getProduct(id: String, connection: Connection): Product {
         val query = "SELECT * FROM product WHERE product_id=?"
         val stmnt = connection.prepareStatement(query)
