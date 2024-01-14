@@ -170,7 +170,7 @@ fun EditOrderDialog(
             ){
                 Checkbox(
                     checked = isAccepted.value,
-                    enabled = false,
+                    enabled = !order.isAccepted,
                     onCheckedChange = {
                         isAccepted.value = it
                     }
