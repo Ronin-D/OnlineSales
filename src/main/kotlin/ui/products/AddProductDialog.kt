@@ -229,7 +229,7 @@ fun AddProductDialog(
             }
             Button(
                 onClick = {
-                    if (productNameField.value.length<3||productNameField.value.length>100){
+                    if (productNameField.value.length<3||productNameField.value.length>45){
                         errorMsg.value = "product name field is incorrect"
                         isInputCorrect.value=false
                     }
@@ -241,7 +241,7 @@ fun AddProductDialog(
                         errorMsg.value = "product name field is incorrect"
                         isInputCorrect.value=false
                     }
-                    else if (manufacturer.value.length<3||manufacturer.value.length>100){
+                    else if (manufacturer.value.length<3||manufacturer.value.length>45){
                         errorMsg.value = "manufacturer field is incorrect"
                         isInputCorrect.value=false
                     }
@@ -253,25 +253,29 @@ fun AddProductDialog(
                         errorMsg.value = "manufacturer field is incorrect"
                         isInputCorrect.value=false
                     }
-                    else if (productModelField.value.length<3||productModelField.value.length>100){
+                    else if (productModelField.value.length<3||productModelField.value.length>45){
                         errorMsg.value = "product model field is incorrect"
+                        isInputCorrect.value=false
+                    }
+                    else if (!productModelField.value.matches(regex = Regex("[a-zA-ZА-Яа-я\\s\\d]*"))){
+                        errorMsg.value = "manufacturer field is incorrect"
                         isInputCorrect.value=false
                     }
                     else if (productModelField.value.isBlank()){
                         errorMsg.value = "product model field is incorrect"
                         isInputCorrect.value=false
                     }
-                    else if (!width.value.matches(Regex("[0-9]*"))
+                    else if (!width.value.matches(Regex("[0-9]+"))
                         ||width.value.length>100||width.value=="0"){
                         errorMsg.value = "width  field is incorrect"
                         isInputCorrect.value=false
                     }
-                    else if (!height.value.matches(Regex("[0-9]*"))
+                    else if (!height.value.matches(Regex("[0-9]+"))
                         ||height.value.length>100||height.value=="0"){
                         errorMsg.value = "height field is incorrect"
                         isInputCorrect.value=false
                     }
-                    else if (!length.value.matches(Regex("[0-9]*"))
+                    else if (!length.value.matches(Regex("[0-9]+"))
                         ||length.value.length>100||length.value=="0"){
                         errorMsg.value = "length field is incorrect"
                         isInputCorrect.value=false
@@ -280,12 +284,12 @@ fun AddProductDialog(
                         errorMsg.value = "warranty date must be filled"
                         isInputCorrect.value=false
                     }
-                    else if (!price.value.matches(Regex("[0-9]*"))
+                    else if (!price.value.matches(Regex("[0-9]+"))
                         ||price.value.length>6||price.value=="0"){
                         errorMsg.value = "price field is incorrect"
                         isInputCorrect.value=false
                     }
-                    else if (image.value.length>1000){
+                    else if (image.value.length>1000||image.value.isBlank()){
                         errorMsg.value = "image is incorrect"
                         isInputCorrect.value=false
                     }

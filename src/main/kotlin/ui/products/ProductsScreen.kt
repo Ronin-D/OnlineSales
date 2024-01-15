@@ -224,7 +224,7 @@ fun ProductItem(
            fontSize = 12.sp
        )
        Text(
-           "${product.price}円",
+           "${product.price}₽",
            modifier = Modifier.width(120.dp),
            fontSize = 12.sp
        )

@@ -289,17 +289,17 @@ fun EditOrderDialog(
                             isInputCorrect.value=false
                         }
                         else if (!name.value.matches(Regex("[a-zA-ZА-Яа-я]*"))
-                            ||name.value.length<3||name.value.length>100||name.value.isBlank()){
+                            ||name.value.length<3||name.value.length>45||name.value.isBlank()){
                             errorMsg.value = "name field is incorrect"
                             isInputCorrect.value=false
                         }
                         else if (!surname.value.matches(Regex("[a-zA-ZА-Яа-я]*"))
-                            ||surname.value.length<3||surname.value.length>100||surname.value.isBlank()){
+                            ||surname.value.length<3||surname.value.length>45||surname.value.isBlank()){
                             errorMsg.value = "surname field is incorrect"
                             isInputCorrect.value=false
                         }
                         else if (!patronymic.value.matches(Regex("[a-zA-ZА-Яа-я]*"))
-                            ||patronymic.value.length<3||patronymic.value.length>100||patronymic.value.isBlank()) {
+                            ||patronymic.value.length<3||patronymic.value.length>45||patronymic.value.isBlank()) {
                             errorMsg.value = "patronymic field is incorrect"
                             isInputCorrect.value = false
                         }

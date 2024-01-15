@@ -23,7 +23,6 @@ class CompletedOrdersViewModel (
     private val usedProducts = mutableSetOf<String>()
 
     fun loadCompletedOrders(date: LocalDate){
-        //reloadCompletedOrders()
         CoroutineScope(Dispatchers.IO).launch {
             completedOrders.value = completedOrdersRepository.getCompletedOrders(date)
         }
@@ -32,10 +31,7 @@ class CompletedOrdersViewModel (
     fun getSummary(completedOrders: List<CompletedOrder>):Int{
         var sum = 0
         completedOrders.forEach {
-            for (i in 1..it.order.count){
-                sum+=it.product.price
-            }
-
+            sum+=it.product.price*it.order.count
         }
         return sum
     }
@@ -58,8 +54,4 @@ class CompletedOrdersViewModel (
     private fun getMapKey(product: Product):String{
         return "name:${product.name} manufacturer:${product.manufacturer} model:${product.model}"
     }
-//    private fun reloadCompletedOrders(){
-//        completedOrders.value = emptyList()
-//    }
-
 }

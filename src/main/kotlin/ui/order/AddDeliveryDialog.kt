@@ -153,7 +153,7 @@ fun AddDeliveryDialog(
                         isInputCorrect.value=false
                     }
                     else if (!courierNameField.value.matches(Regex("[a-zA-ZА-Яа-я]*"))
-                        ||courierNameField.value.length<3||courierNameField.value.length>100){
+                        ||courierNameField.value.length<3||courierNameField.value.length>45){
                         errorMsg.value = "courier name is incorrect"
                         isInputCorrect.value=false
                     }
